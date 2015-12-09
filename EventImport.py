@@ -7,6 +7,7 @@
 
 import csv, sqlite3, os, sys, glob
 from datetime import datetime
+from OrganizationAliases import AliasDict
 
 def event_info(r, conn):
     print("%(Event ID)s %(Event Name)s %(Date Attending)s" % r)
@@ -17,13 +18,93 @@ def event_info(r, conn):
     c = conn.cursor()
     c.execute("SELECT * FROM event WHERE eventbrite_id=?", (event_id,))
     
-    if len(c.fetchall())==0:
+    volunteer_call = False
+    
+    data = c.fetchall()
+    
+    if len(data)==0:
         print("Creating new event.")
-        c.execute("INSERT INTO event VALUES (NULL, ?, ?, ?)", (event_id, event_date, event_name))
+        c.execute("INSERT INTO event VALUES (NULL, ?, ?, ?, 0)", (event_id, event_date, event_name))
     else:
+        volunteer_call=bool(data[0][4])
         print("Event %s already exists." % event_id)
     
+    return event_id, volunteer_call
+
+def contact_info(r, conn, is_volunteer=False):
+    
+    if is_volunteer:
+        table = "volunteer"
+    else:
+        table = "contact"
+        
+    print("%(First Name)s %(Last Name)s %(Email)s" % r)
+    
+    first_name = r["First Name"].strip()
+    last_name  = r["Last Name"].strip()
+    
+    # people don't know how to write their names...
+    if first_name[0].islower() or first_name[-1].isupper():
+        first_name = " ".join([i.capitalize() for i in first_name.split()])
+    if last_name[0].islower() or last_name[-1].isupper():
+        last_name  = " ".join([i.capitalize() for i in last_name.split()])
+    email      = r["Email"].strip()
+    
+    c = conn.cursor()
+    c.execute("SELECT * FROM %s WHERE email=?" % table, (email,))
+    
+    data = c.fetchall()
+    
+    if len(data)==0:
+        print("Creating new %s." % table)
+        # CREATE TABLE "contact" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
+        # "last_name" VARCHAR, 
+        # "first_name" VARCHAR, 
+        #"title" VARCHAR, 
+        #"hh_responsible" INTEGER, 
+        #"role" VARCHAR, 
+        #"category_id" INTEGER check(typeof("category_id") = 'integer') , 
+        #"notes" VARCHAR, 
+        #organization_id INTEGER, 
+        #email VARCHAR)
+        c.execute("INSERT INTO %s VALUES (NULL, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL, ?)" % table, (last_name, first_name, email))
+    else:
+        print("%s %s %salready exists." % (table.capitalize(), first_name, last_name))
+    
     return
+
+def organization_info(r, conn):
+    print("%(Company)s" % r)
+    
+    org = r["Company"].strip().encode("utf-8")
+    
+    # strip some extra bullshit
+    org = org.replace(b"Inc.",b"").strip()
+    
+    #if "Anges" in org:
+    #    print(org, org in AliasDict.keys(), AliasDict.keys())
+    #    sys.exit(666)
+    
+    if org in AliasDict.keys():
+        org = AliasDict[org]
+    
+    if org == "" or org == None:
+        return None    
+    
+    print(repr(org))
+    
+    c = conn.cursor()
+    c.execute("SELECT * FROM organization WHERE UPPER(name)=?", (org.upper(),))
+    
+    data = c.fetchall()
+    
+    if len(data)==0:
+        print("Creating new organization.")
+        c.execute("INSERT INTO organization VALUES (NULL, ?, NULL)", (org,))
+    else:
+        print("Organization %s already exists." % org)
+        
+    return org
 
 def main():
     # get the input files
@@ -49,15 +130,21 @@ def main():
     csv_file = open(in_csv)
     reader = csv.DictReader(csv_file)
 
-    run_once = True
+    event_id = None
+    volunteer_call = False
     
     for r in reader:
         #print(r.keys())
         
         # Event info is run once per event
-        if run_once:
-            event_info(r, conn)
-            run_once = False
+        if not event_id:
+            event_id, volunteer_call = event_info(r, conn)
+    
+        organization_info(r, conn)
+        
+        if  volunteer_call:
+            contact_info(r, conn, volunteer_call)
+    
     
     csv_file.close()
     
