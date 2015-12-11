@@ -16,7 +16,6 @@ AliasDict = { "360 Medlink" : "360Medlink",
               "n/a" : None,
               "NA" : None,
               "N/A" : None,
-<<<<<<< HEAD
               "na" : None,
               "rien" : None,
               "Independent" : None,
@@ -36,13 +35,10 @@ AliasDict = { "360 Medlink" : "360Medlink",
               "Agence de la sante publique du Canada" : u"Agence de la sant\u00e9 publique du Canada",
               "Anges Quebec" : "Anges Qu\u00e9bec",
               "Membre, Anges Qu\u00e9bec" : "Anges Qu\u00e9bec",
-=======
               "Independent" : None,
               "Independent Contractor" : None,
               "Self-employed" : None,
               "Agence de la sante publique du Canada" : u"Agence de la sant\u00e9 publique du Canada",
-              "Anges Quebec" : u"Anges Qu\u00e9bec",
->>>>>>> 194a3912654ce34ffd033e787aa232046b56a814
               "Association I.R.I.S. (Centre de crise)" : "Association IRIS",
               "BDC Healthcare Fund" : "BDC Venture Healthcare Fund",
               "BDC Venture Capital" : "BDC Venture Healthcare Fund",
@@ -59,41 +55,26 @@ AliasDict = { "360 Medlink" : "360Medlink",
               "Ste-Justine MUCH" : "CHU Sainte-Justine",
               "chusjustine" : "CHU Sainte-Justine",
               "ste-justine hospital" : "CHU Sainte-Justine",
-<<<<<<< HEAD
               "Sainte Justine Hospital" : "CHU Sainte-Justine",
-=======
->>>>>>> 194a3912654ce34ffd033e787aa232046b56a814
               "centre de r\u00e9adaptation marie enfant" : "CHU Sainte-Justine",
               "Chu St-Justine" : "CHU Sainte-Justine",
               "COMITE DE USAGERS CHUM ST JUSTINE" : "CHU Sainte-Justine",
               "CHUSJ" : "CHU Sainte-Justine",
               "CCHU Sainte-Justine" : "CHU Sainte-Justine",
-<<<<<<< HEAD
               "CHU Ste-Justine-Centre de r\u00e9adaptation Marie-Enfant"      : "CHU Sainte-Justine",
               "CHU Ste-Justine-Centre de r\u00e9adaptation Marie-Enfant" : "CHU Sainte-Justine",
               "Centre d ePromotion de la Sant\u00e9 - CHU Sainte-Justine" : "CHU Sainte-Justine",
               "Centre de promotion de la sant\u00e9 CHU Sainte-Justine" : "CHU Sainte-Justine",
-=======
-              "CHU Ste-Justine-Centre de réadaptation Marie-Enfant"      : "CHU Sainte-Justine",
-              "CHU Ste-Justine-Centre de réadaptation Marie-Enfant" : "CHU Sainte-Justine",
-              "Centre d ePromotion de la Sant\u00e9 - CHU Sainte-Justine" : "CHU Sainte-Justine",
-              "Centre de promotion de la santé CHU Sainte-Justine" : "CHU Sainte-Justine",
->>>>>>> 194a3912654ce34ffd033e787aa232046b56a814
               "Centre de promotion de la sant\u00e9. CHU Sainte-Justine" : "CHU Sainte-Justine",
               "Centre hospitalier Universitaire Sainte Justine" : "CHU Sainte-Justine",
               "H\u00f4pital Ste-Justine" : "CHU Sainte-Justine",
               "Hopital Sainte Justine" : "CHU Sainte-Justine",
               "Hopital Ste-Justine" : "CHU Sainte-Justine",
-<<<<<<< HEAD
               "Hopital Ste-Justine, Centre de r\u00e9adaptation Marie Enfant" : "CHU Sainte-Justine",
               "Ste-justine hospital" : "CHU Sainte-Justine",
               "Centre hospitalier universitaire de Montr\u00e9al" : "CHUM",
               "CHUM - H^tel-Dieu Hospital" : "CHUM",
               "CHUM - H\u00f4tel-Dieu Hospital" : "CHUM",
-=======
-              "Hopital Ste-Justine, Centre de réadaptation Marie Enfant" : "CHU Sainte-Justine",
-              "Centre hospitalier universitaire de Montr\u00e9al" : "CHUM",
->>>>>>> 194a3912654ce34ffd033e787aa232046b56a814
               "LightspeedPOS" : "Lightspeed POS",
               "Lightspeed" : "Lightspeed POS",              
               "McGill (Centre for Medical Education)" : "McGill",
@@ -106,7 +87,6 @@ AliasDict = { "360 Medlink" : "360Medlink",
               "McGill University, McGill University Health Centre" : "CUSM/MUHC",
               "McGill University, Montreal" : "McGill",
               "McGill University, Quartier de l'innovation (QI)" : "McGill",
-<<<<<<< HEAD
               "Mcgill university" : "McGill",
               "Universite McGill" : "McGill",
               "Universit\u00e9 McGill" : "McGill",
@@ -120,10 +100,6 @@ AliasDict = { "360 Medlink" : "360Medlink",
               "\u00c9TS" : "ETS Montr\u00e9al",
               "ETS" : "ETS Montr\u00e9al",
               "\u00c9TS Montreal" : "ETS Montr\u00e9al",
-=======
-              "V\u00e9zina et associ\u00e9s inc." : "V\u00e9zina & associ\u00e9s inc.",
-              "\u00c9cole Polytechnique de Montreal" : u"\u00c9cole Polytechnique de Montr\u00e9al",
->>>>>>> 194a3912654ce34ffd033e787aa232046b56a814
               "F&.Co" : "F.&Co",
               "f. & co" : "F.&Co",
               "Frank and Oak" : "Frank & Oak",
@@ -132,7 +108,6 @@ AliasDict = { "360 Medlink" : "360Medlink",
               "HEC Montreal" : "HEC",
               "HEC Montreal - Hacking Health" : "HEC",
               "HEC Montr\u00e9al" : "HEC",
-<<<<<<< HEAD
               "HEC Montr\u00e9al" : "HEC",
               "hEC Montreal" : "HEC",
               "Centre Hospitalier Universitaire de Sherbrooke - CHUS" : "CHUS",
@@ -194,11 +169,6 @@ AliasDict = { "360 Medlink" : "360Medlink",
               "\u00c9ventium" : "Eventium",
               "JMSB Concordia University" : "Concordia",
               "Concordia University" : "Concordia",
-=======
-              "HEC Montréal" : "HEC",
-              "Centre Hospitalier Universitaire de Sherbrooke - CHUS" : "CHUS",
-              "Centre Hospitalier Universitaire de Sherbrooke." : "CHUS",
->>>>>>> 194a3912654ce34ffd033e787aa232046b56a814
               }
 
 
