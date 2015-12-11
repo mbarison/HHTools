@@ -5,7 +5,7 @@
 #############################################################
 
 
-import csv, sqlite3, os, sys, glob
+import csv, sqlite3, os, sys, glob, codecs
 from datetime import datetime
 from OrganizationAliases import AliasDict
 
@@ -76,14 +76,13 @@ def contact_info(r, conn, is_volunteer=False):
 def organization_info(r, conn):
     print("%(Company)s" % r)
     
-    org = r["Company"].strip().encode("utf-8")
+    org = r["Company"].strip("., ")
     
     # strip some extra bullshit
-    org = org.replace(b"Inc.",b"").strip()
-    
-    #if "Anges" in org:
-    #    print(org, org in AliasDict.keys(), AliasDict.keys())
-    #    sys.exit(666)
+    org = org.replace("Inc","").strip()
+        
+    #for i in AliasDict.keys():
+    #    print("1>%s<< 2>%s<< %s %s %s" % (org, i, repr(org), repr(i), i==org))
     
     if org in AliasDict.keys():
         org = AliasDict[org]
@@ -94,7 +93,7 @@ def organization_info(r, conn):
     print(repr(org))
     
     c = conn.cursor()
-    c.execute("SELECT * FROM organization WHERE UPPER(name)=?", (org.upper(),))
+    c.execute("SELECT * FROM organization WHERE UPPER(name)=UPPER(?)", (org,))
     
     data = c.fetchall()
     
@@ -127,7 +126,7 @@ def main():
     
     conn = sqlite3.connect(in_sql)
     
-    csv_file = open(in_csv)
+    csv_file = codecs.open(in_csv,"r","utf-8")
     reader = csv.DictReader(csv_file)
 
     event_id = None
