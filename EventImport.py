@@ -76,9 +76,11 @@ def contact_info(r, conn, is_volunteer=False):
 def organization_info(r, conn):
     print("%(Company)s" % r)
     
-    org = r["Company"].strip("., ")
+    org = r["Company"].strip()
     
     # strip some extra bullshit
+    org = org.strip(".")
+    org = org.strip(",")
     org = org.replace("Inc","").strip()
         
     #for i in AliasDict.keys():
