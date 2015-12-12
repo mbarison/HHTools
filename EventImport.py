@@ -11,7 +11,7 @@ from OrganizationAliases import AliasDict
 
 def event_info(r, conn):
     print("%(Event ID)s %(Event Name)s %(Date Attending)s" % r)
-    event_id   = r["Event ID"]
+    event_id   = int(r["Event ID"])
     event_name = r["Event Name"]
     event_date = datetime.strptime(r["Date Attending"], "%b %d, %Y at %I:%M %p")
     
@@ -33,10 +33,12 @@ def event_info(r, conn):
 
 def contact_info(r, conn, is_volunteer=False):
     
+    is_volunteer |= (r["Organization ID"] == 1) 
+    
     if is_volunteer:
-        table = "volunteer"
+        _type = "volunteer"
     else:
-        table = "contact"
+        _type = "contact"
         
     print("%(First Name)s %(Last Name)s %(Email)s" % r)
     
@@ -48,28 +50,40 @@ def contact_info(r, conn, is_volunteer=False):
         first_name = " ".join([i.capitalize() for i in first_name.split()])
     if last_name[0].islower() or last_name[-1].isupper():
         last_name  = " ".join([i.capitalize() for i in last_name.split()])
-    email      = r["Email"].strip()
+    email      = r["Email"].strip().lower()
     
     c = conn.cursor()
-    c.execute("SELECT * FROM %s WHERE email=?" % table, (email,))
+    c.execute("SELECT id FROM contact WHERE LOWER(email)=LOWER(?)", (email,))
     
     data = c.fetchall()
+    contact_id = None
     
     if len(data)==0:
-        print("Creating new %s." % table)
-        # CREATE TABLE "contact" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
-        # "last_name" VARCHAR, 
-        # "first_name" VARCHAR, 
-        #"title" VARCHAR, 
-        #"hh_responsible" INTEGER, 
-        #"role" VARCHAR, 
-        #"category_id" INTEGER check(typeof("category_id") = 'integer') , 
-        #"notes" VARCHAR, 
-        #organization_id INTEGER, 
-        #email VARCHAR)
-        c.execute("INSERT INTO %s VALUES (NULL, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL, ?)" % table, (last_name, first_name, email))
+        print("Creating new %s." % _type)
+#         "id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,
+#         "last_name" TEXT, 
+#         "first_name" TEXT, 
+#         "email" TEXT,
+#         "title" TEXT, 
+#         "responsible_id",
+#         "organization_id", 
+#         "role" TEXT, 
+#         "category_id" INTEGER, 
+#         "is_volunteer" BOOL,
+#         "is_active" BOOL,
+#         "notes" TEXT, 
+        c.execute("INSERT INTO contact VALUES (NULL, ?, ?, ?, ?, NULL, ?, ?, NULL, ?, NULL, NULL)", (last_name, first_name, email, r["Prefix"], r["Organization ID"], r["Job Title"], bool(is_volunteer)))
     else:
-        print("%s %s %salready exists." % (table.capitalize(), first_name, last_name))
+        print("%s %s %s already exists." % (_type.capitalize(), first_name, last_name))
+        contact_id = data[0][0]
+    
+    # get contact id
+    if not contact_id:
+        c.execute("SELECT id from contact WHERE LOWER(email)=LOWER(?)", (email,))
+        contact_id = c.fetchone()[0]
+    
+    # create attendee relationship
+    c.execute("INSERT INTO attendee VALUES (NULL, ?, ?)",  (int(r["Event ID"]), contact_id))
     
     return
 
@@ -77,6 +91,8 @@ def organization_info(r, conn):
     print("%(Company)s" % r)
     
     org = r["Company"].strip()
+    
+    r["Organization ID"] = None
     
     # strip some extra bullshit
     org = org.strip(".")
@@ -95,17 +111,26 @@ def organization_info(r, conn):
     print(repr(org))
     
     c = conn.cursor()
-    c.execute("SELECT * FROM organization WHERE UPPER(name)=UPPER(?)", (org,))
+    c.execute("SELECT id FROM organization WHERE UPPER(name)=UPPER(?)", (org,))
     
     data = c.fetchall()
+    organization_id = None
     
     if len(data)==0:
         print("Creating new organization.")
         c.execute("INSERT INTO organization VALUES (NULL, ?, NULL)", (org,))
     else:
         print("Organization %s already exists." % org)
+        organization_id = data[0][0]
         
-    return org
+    if not organization_id:
+        c.execute("SELECT id FROM organization WHERE UPPER(name)=UPPER(?)", (org,))
+        organization_id = c.fetchone()[0]
+        
+    r["Organization ID"] = organization_id
+
+        
+    return organization_id
 
 def main():
     # get the input files
@@ -143,8 +168,7 @@ def main():
     
         organization_info(r, conn)
         
-        if  volunteer_call:
-            contact_info(r, conn, volunteer_call)
+        contact_info(r, conn, volunteer_call)
     
     
     csv_file.close()
